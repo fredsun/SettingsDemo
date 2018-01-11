@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="network">
+    <SwitchPreference android:title="节省流量"
+        android:key="save_data"
+        android:summary="在使用收费网络时，禁用媒体预览"
+        android:defaultValue="false"
+        />
+    <EditTextPreference android:title="testtitle"
+        android:key="test_key"
+        android:summary="testsummary"
+        />
+    <!-- 9. 给 preference 添加 fragment 标签-->
+    <Preference
+        android:title="进阶:二次跳转"
+        android:fragment="com.settingsdemo.TwiceJumpFragment"/>
+
+</PreferenceScreen>
