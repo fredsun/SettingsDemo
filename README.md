@@ -4,16 +4,17 @@
 activity 和 fragment 布局都来自R.xml.
 监听通过 OnPreferenceChangeListener, 对表单选项单独注册监听
 * 第二种方案 来自 github 上的 [Twidere](https://github.com/TwidereProject/Twidere-Android)
-首先谷歌官方对于PreferenceActivity的[建议](https://developer.android.com/guide/topics/ui/settings.html#Fragment)
+![PreferenceEXDemo.gif](http://upload-images.jianshu.io/upload_images/2470338-4414910e6a10a98c.gif?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+首先谷歌官方对于 PreferenceActivity 的[建议](https://developer.android.com/guide/topics/ui/settings.html#Fragment)
   ```
   如果您在开发针对 Android 3.0（API 级别 11）及更高版本的应用，则应使用 PreferenceFragment 显示 Preference 对象的列表。您可以将 PreferenceFragment 添加到任何 Activity，而不必使用 PreferenceActivity。
   ```
   所以用的 activity 是普通的 xml, 用 listview 实现了列表,
-  fragment布局使用第一种方案的R.xml
+  fragment 布局使用第一种方案的 R.xml
 
 先来看第一种
 ##第一种方案
-**完全是Android Studio的Demo，只需知道第二种方案用了第一种方案，也就是官方Demo里自带的 R.xml.xxx 的 preference 布局文, 其余可跳过**
+**其实完全是 Android Studio 的 Demo，只需知道第二种方案用了第一种方案，也就是官方 Demo 里自带的 R.xml.xxx 的 preference 布局文件, 其余可跳过**
 1. 资源下新建 xml 文件夹, 新建布局
 activity的布局:
 ```
@@ -164,8 +165,8 @@ public static class NetWorkPreferenceFragment extends PreferenceFragment{
         }
     }
 ```
-
-接着来看第二种
+---
+**接着来看第二种**
 ## 第二种方案
 首先致敬 [Twidere](https://github.com/TwidereProject/Twidere-Android) 项目的完全开源.才得以看到源码, 虽然是kotlin的。。= =
 以及被我删了部分后转成的java项目[Github](https://github.com/sunxlfred/SettingsDemo)
