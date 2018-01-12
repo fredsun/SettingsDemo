@@ -1,21 +1,20 @@
 ### 两种创建 PreferenceActivity 的方案
 简述:
 * 第一种方案 来自 Android Studio new 出来的 demo.
-activity和fragment布局都来自R.xml.
-监听通过OnPreferenceChangeListener, 对表单选项单独注册监听
-* 第二种方案 来自 github 上的 Twidere
-不过谷歌官方给的建议是
-```
-如果您在开发针对 Android 3.0（API 级别 11）及更高版本的应用，则应使用 PreferenceFragment 显示 Preference 对象的列表。您可以将 PreferenceFragment 添加到任何 Activity，而不必使用 PreferenceActivity。
-from https://developer.android.com/guide/topics/ui/settings.html#Fragment
-```
-activity是普通的xml, 用listview实现了列表,
-fragment布局使用第一种方案的R.xml
+activity 和 fragment 布局都来自R.xml.
+监听通过 OnPreferenceChangeListener, 对表单选项单独注册监听
+* 第二种方案 来自 github 上的 [Twidere](https://github.com/TwidereProject/Twidere-Android)
+首先谷歌官方对于PreferenceActivity的[建议](https://developer.android.com/guide/topics/ui/settings.html#Fragment)
+  ```
+  如果您在开发针对 Android 3.0（API 级别 11）及更高版本的应用，则应使用 PreferenceFragment 显示 Preference 对象的列表。您可以将 PreferenceFragment 添加到任何 Activity，而不必使用 PreferenceActivity。
+  ```
+  所以用的 activity 是普通的 xml, 用 listview 实现了列表,
+  fragment布局使用第一种方案的R.xml
 
 先来看第一种
 ##第一种方案
-
-1. 资源下新建xml文件夹, 新建布局
+**完全是Android Studio的Demo，只需知道第二种方案用了第一种方案，也就是官方Demo里自带的 R.xml.xxx 的 preference 布局文, 其余可跳过**
+1. 资源下新建 xml 文件夹, 新建布局
 activity的布局:
 ```
 <preference-headers>
@@ -23,7 +22,7 @@ activity的布局:
   <header/>
 </preference-headers>
 ```
-fragment的布局框架:
+fragment 的布局框架:
 ```
 <PreferenceScreen>
   <PreferenceCategory/>分类标题
@@ -32,7 +31,7 @@ fragment的布局框架:
     summary 条目内容/>
   <Preference/>
 ```
-一个具体的fragment布局,添加了key, 用于监听
+一个具体的 fragment 布局,添加了 key, 用于监听
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
@@ -168,6 +167,8 @@ public static class NetWorkPreferenceFragment extends PreferenceFragment{
 
 接着来看第二种
 ## 第二种方案
+首先致敬 [Twidere](https://github.com/TwidereProject/Twidere-Android) 项目的完全开源.才得以看到源码, 虽然是kotlin的。。= =
+以及被我删了部分后转成的java项目[Github](https://github.com/sunxlfred/SettingsDemo)
 1. 构建左侧 listview 的条目 item 的类
 2. 创建左侧 listview 的条目 item 的 xml, 以及点击效果的 selector
 3. 构建 adapter, 把 xml 和创建的 item 类的实体关联起来
@@ -181,7 +182,7 @@ public static class NetWorkPreferenceFragment extends PreferenceFragment{
 否则报错 Must specify preferenceTheme in theme
 8. 监听back, log打印sp里存储的设置参数
 9. 进阶 右侧详细条目还需要二次跳转, 重写 onPreferenceStartFragment(注意v7包还是v14包, 和Fragment里的preference一致就行)
-10. 进阶2 back键时判断是activity还是fragment跳出
+10. 进阶2 back键时判断是 activity 还是 fragment 跳出
 
 #### Must specify preferenceTheme in theme
 在style里新建
@@ -190,14 +191,14 @@ public static class NetWorkPreferenceFragment extends PreferenceFragment{
 ```
 针对4.4以下的可能还需另外配置
 
-### SharePreference
+## 关于SharePreference
 #### getSharedPreferences(name , mode)
 mode的选择:
 1. Context.MODE_PRIVATE:
 2. Context.MODE_WORLD_READABLE: API17后不建议使用, 全局可读文件很危险
 3. Context.MODE_MULTI_PROCESS: 不要用来跨进程, 还是用ContentProvider
 
-#### tips[参考](http://weishu.me/2016/10/13/sharedpreference-advices/)
+#### SharedPreference 的使用 tips[参考](http://weishu.me/2016/10/13/sharedpreference-advices/)
 1. 别存大 key 和 value(一口气加载时会卡住)
 2. commit在当前线程别在主线程
 3. 别用来跨进程
@@ -210,16 +211,16 @@ mode的选择:
     ```
 
 #### OnSharedPreferenceChangeListener
-1. OnSharedPreferenceChangeListener 和 OnPreferenceChangeListener比较, 前者是preference有变化就收到，后者只针对用onPreferenceChange绑定过的 key.[参考](https://stackoverflow.com/questions/13321637/whats-different-between-onpreferencechangelistener-and-onsharedpreferencechange)
-2. OnSharedPreferenceChangeListener是弱引用, 需要在生命周期里注册监听[参考](http://droidyue.com/blog/2014/11/29/why-onsharedpreferencechangelistener-was-not-called/)
+1. OnSharedPreferenceChangeListener 和 OnPreferenceChangeListener比较, 前者是 preference 有变化就收到，后者只针对用 onPreferenceChange 绑定过的 key.[参考](https://stackoverflow.com/questions/13321637/whats-different-between-onpreferencechangelistener-and-onsharedpreferencechange)
+2. OnSharedPreferenceChangeListener 是弱引用, 需要在生命周期里注册监听[参考](http://droidyue.com/blog/2014/11/29/why-onsharedpreferencechangelistener-was-not-called/)
 
-#### apply还是commit[参考](http://www.cloudchou.com/android/post-988.html)
+#### 提交用apply还是commit[参考](http://www.cloudchou.com/android/post-988.html)
 apply 调用 QueuedWork.add(awaitCommit), 如果任务过多, 等待时间过久, 且开始了onPause, 会导致onPause 因为 QueuedWork.waitToFinish()被apply过久而ANR. 最优方案是开启一个线程去 commit.
 且 commit 有返回值, 可以补救
 
 
-#### addPreferencesFromResource(redId) 还是 setPreferencesFromResource(redId, rootkey)
-其实没有太大的差别, 虽然官方的PreferenceFragment 是在 onCreate 中调用了 addPreferencesFromResource[链接](https://developer.android.com/reference/android/preference/PreferenceFragment.html), 而PreferenceFragmentCompat的demo中, onCreatePreferences 里用的是 setPreferencesFromResource [链接](https://developer.android.com/reference/android/support/v7/preference/PreferenceFragmentCompat.html#setPreferencesFromResource(int, java.lang.String)),
+#### Preference 中 inflate xml 使用 addPreferencesFromResource(redId) 还是 setPreferencesFromResource(redId, rootkey)
+其实没有太大的差别, 虽然官方的PreferenceFragment 是在 onCreate 中调用了 addPreferencesFromResource[链接](https://developer.android.com/reference/android/preference/PreferenceFragment.html), 而PreferenceFragmentCompat的demo中, onCreatePreferences 里用的是 setPreferencesFromResource [链接](https://developer.android.com/reference/android/support/v7/preference/PreferenceFragmentCompat.html),
 来看 setPreferencesFromResource 的源码
 ```
 @Override
@@ -266,5 +267,6 @@ public boolean onPreferenceStartScreen(PreferenceFragment caller, PreferenceScre
 LeanbackSettingsFragment
 
 > 参考
+> [github-Twidere项目](https://github.com/TwidereProject/Twidere-Android)
 > [OnSharedPreferenceChangeListeners设计-弱引用](http://droidyue.com/blog/2014/11/29/why-onsharedpreferencechangelistener-was-not-called/)
 > [SharedPreference使用tips](http://weishu.me/2016/10/13/sharedpreference-advices/)
