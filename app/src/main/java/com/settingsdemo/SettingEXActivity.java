@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
@@ -96,6 +97,7 @@ public class SettingEXActivity extends AppCompatActivity implements AdapterView.
         openDetails(i);
     }
 
+    //9. 进阶 右侧详细条目还需要二次跳转, 重写 onPreferenceStartFragment(注意v7包还是v14包, 和Fragment里的preference一致就行)
     @Override
     public boolean onPreferenceStartFragment(PreferenceFragmentCompat caller, Preference pref) {
         FragmentManager supportFragmentManager = getSupportFragmentManager();
@@ -272,13 +274,26 @@ public class SettingEXActivity extends AppCompatActivity implements AdapterView.
     }
 
     //8. 监听back, 在按下时log对应key的内容. 并弹出一个框
+    //10. 进阶2 back键时判断是activity还是fragment跳出
     @Override
     public void onBackPressed() {
-        DialogFragment dialogFragment = RestartConfirmFragment.newInstance(R.string.restart_confirm_title);
-        dialogFragment.show(getSupportFragmentManager(), "restartConfirmDialog");
-        SharedPreferences preference = getSharedPreferences(getString(R.string.sp_name_preference), Context.MODE_PRIVATE);
-        Log.i(TAG, "test_key1"+preference.getString("test_key", ""));
-        Log.i(TAG, "save_data1"+preference.getBoolean("save_data", false));
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        final boolean isStateSaved = fragmentManager.isStateSaved();
+        if (isStateSaved && Build.VERSION.SDK_INT <= Build.VERSION_CODES.N_MR1) {
+            // Older versions will throw an exception from the framework
+            // FragmentManager.popBackStackImmediate(), so we'll just
+            // return here. The Activity is likely already on its way out
+            // since the fragmentManager has already been saved.
+            return;
+        }
+        if (isStateSaved || !fragmentManager.popBackStackImmediate()) {
+            DialogFragment dialogFragment = RestartConfirmFragment.newInstance(R.string.restart_confirm_title);
+            dialogFragment.show(getSupportFragmentManager(), "restartConfirmDialog");
+            SharedPreferences preference = getSharedPreferences(getString(R.string.sp_name_preference), Context.MODE_PRIVATE);
+            Log.i(TAG, "test_key1"+preference.getString("test_key", ""));
+            Log.i(TAG, "save_data1"+preference.getBoolean("save_data", false));
+        }
+
     }
 
     public static class RestartConfirmFragment extends DialogFragment{
